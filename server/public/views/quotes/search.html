@@ -58,18 +58,18 @@
                                 <div class="element-wrapper column-sm-50 clearfix">
                                     <div class="column-xs-50 column-full">
                                         <label>Start Date</label>
-                                        <vuejs-datepicker v-model="start_date" input-class="form-element date" editable="true" name="start_date" format="MM/dd/yyyy" :typeable=true></vuejs-datepicker>
+                                        <vuejs-datepicker @selected="validate" v-model="start_date" input-class="form-element date" editable="true" name="start_date" format="MM/dd/yyyy" :typeable=true></vuejs-datepicker>
                                     </div>
                                     
-                                    <div class="column-xs-50 column-full">
+                                    <div class="column-xs-50 column-full" >
                                         <label>End Date</label>
-                                        <vuejs-datepicker  v-model="end_date" input-class="form-element date" name="end_date" format="MM/dd/yyyy" :typeable=true></vuejs-datepicker>
+                                        <vuejs-datepicker @selected="validate" @input="validate"  v-model="end_date" input-class="form-element date" name="end_date" format="MM/dd/yyyy" :typeable=true></vuejs-datepicker>
                                     </div>                        
                                 </div>
             
                                 <div class="element-wrapper column-sm-50">
                                     <label>Policy Max</label>
-                                    <select class="form-element" name="policy_max" v-model="policy_max">
+                                    <select class="form-element" name="policy_max" v-model="policy_max" v-on:change="validate">
                                         <option value="">Choose a Max</option>
                                         <option value="50">50,000</option>
                                         <option value="100">100,000</option>
@@ -80,17 +80,17 @@
             
                                 <div class="element-wrapper column-sm-50">
                                     <label>Citizenship</label>
-                                    <input v-model="citizenship" class="form-element" name="citizenship" />
+                                    <input v-model="citizenship" v-on:keyup="validate" class="form-element" name="citizenship" />
                                 </div>
             
                                 <div class="element-wrapper column-sm-50">
                                     <label>Age/Year</label>
-                                    <input v-model="age" class="form-element" name="age" />
+                                    <input v-model="age" v-on:keyup="validate" class="form-element" name="age" />
                                 </div>
             
                                 <div class="element-wrapper column-sm-50">
                                     <label>Mailing State</label>
-                                    <input v-model="state" class="form-element" name="state" />
+                                    <input v-model="state" v-on:keyup="validate" class="form-element" name="state" />
                                 </div>
                             </div>
 
@@ -175,6 +175,7 @@
                 vuejsDatepicker
             },
             data: {
+                submitted: false,
                 start_date: '',
                 end_date: '',
                 policy_max: '',
@@ -262,6 +263,7 @@
                     this.selected = [];
                 },
                 submit: function() {
+                    this.submitted = true;
                     this.validate();
                     var _this = this;
 
@@ -296,8 +298,12 @@
                     this.state = '';
                     this.errorMessage = null;
                     this.quotes = null;
+                    this.submitted = false;
                 },
                 validate: function() {
+                    if(!this.submitted)
+                        return;
+
                     var dateRegex = /^\\d{2}[\/]\\d{2}[\/]\\d{4}$/;
                     var wordRegex = /[^a-zA-Z\\s]/;
                     var errors = {};
