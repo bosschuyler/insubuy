@@ -1,0 +1,151 @@
+body {
+  font-family: "Raleway";
+  font-size: 13px;
+}
+
+.light-blue-bg {
+  background-color: #f0f3f6;
+}
+
+.container {
+  width: 800px;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+}
+
+.panel {
+  border: 1px solid #dadada;
+  border-radius: 3px;
+}
+.panel .panel-header {
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  padding: 10px;
+  border: 0;
+  text-align: left;
+}
+.panel .panel-title {
+  margin-top: 0.5em;
+  float: left;
+  font-size: 1.5em;
+}
+.panel .panel-logo {
+  float: left;
+  margin-right: 1.5em;
+}
+.panel .panel-body {
+  padding: 10px;
+  text-align: left;
+}
+.panel .panel-body label {
+  line-height: 1.5em;
+  font-weight: bold;
+}
+
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+select.form-element {
+  height: 40px;
+}
+
+.form-element {
+  display: block;
+  width: 100%;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.form-element:focus {
+  color: #495057;
+  background-color: #fff;
+  border-color: #80bdff;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.column-sm-100, .column-xs-100 {
+  width: 96%;
+  margin-right: 2%;
+  margin-left: 2%;
+}
+
+.column-sm-50, .column-xs-50 {
+  width: 46%;
+  margin-left: 2%;
+  margin-right: 2%;
+  float: left;
+}
+.column-sm-50.column-full, .column-xs-50.column-full {
+  width: 48%;
+}
+.column-sm-50.column-full:nth-child(2n+1), .column-xs-50.column-full:nth-child(2n+1) {
+  margin-left: 0;
+}
+.column-sm-50.column-full:nth-child(2n), .column-xs-50.column-full:nth-child(2n) {
+  margin-right: 0;
+}
+
+.element-wrapper {
+  margin-bottom: 15px;
+}
+
+.btn {
+  padding: 10px;
+  text-align: center;
+  border-radius: 3px;
+  font-weight: bold;
+  display: inline-block;
+  border: 0;
+  cursor: pointer;
+}
+.btn.btn-submit {
+  background-color: #e29837;
+  color: white;
+}
+.btn.btn-reset {
+  background-color: #427ce9;
+  color: white;
+}
+
+.alert {
+  padding: 10px;
+  border-radius: 3px;
+  margin-bottom: 15px;
+}
+.alert.alert-error {
+  background-color: #ff8383;
+  border: 1px solid #f55252;
+}
+
+.no-margin {
+  margin: 0;
+}
+
+.margin-bottom-md {
+  margin-bottom: 5px;
+}
+
+@media only screen and (max-width: 820px) {
+  .container {
+    width: 96%;
+    padding: 0 2%;
+  }
+
+  .column-sm-50 {
+    width: 96%;
+  }
+}
+
+/*# sourceMappingURL=main.css.map */
