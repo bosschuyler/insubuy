@@ -100,23 +100,24 @@
                     </div>
                     <div class="panel-body">
                         <!-- FILTER AND SORT FORM -->
+                        <h4 class="no-margin margin-bottom-xs">Filters</h4>
                         <div class="form-inline margin-bottom-md">
                             <div class=" ">
-                                <select v-model="section_filter" class="form-element margin-bottom-md" style="width: 200px">
+                                <select v-model="section_filter" class="form-element margin-bottom-md" style="width: 200px" v-on:change="filter">
                                     <option v-for="section in availableSections" v-bind:value="section.value">
                                         {{ section.name }}
                                     </option>
                                 </select>
             
-                                <select v-model="type_filter" class="form-element margin-bottom-md" style="width: 200px;">
+                                <select v-model="type_filter" class="form-element margin-bottom-md" style="width: 200px;" v-on:change="filter">
                                     <option v-for="type in availableTypes" v-bind:value="type.value">
                                         {{ type.name }}
                                     </option>
                                 </select>
             
-                                <input type="checkbox" class="margin-bottom-md" v-model="best_seller" name="best_seller" /> Best Seller
+                                <input type="checkbox" class="margin-bottom-md" v-model="best_seller" name="best_seller" v-on:change="filter"/> Best Seller
                         
-                                <input type="button" class="btn btn-sm btn-submit margin-bottom-md" v-on:click="filter" value="Filter" />
+                                <!-- <input type="button" class="btn btn-sm btn-submit margin-bottom-md" v-on:click="filter" value="Filter" /> -->
                             </div>
                             <div class="">
                                 <div class="btn btn-sm" v-bind:class="[priceSort ? 'btn-active' : 'btn-inactive']" v-on:click="sortByPrice">Sort By Price</div>
@@ -281,7 +282,7 @@
                 },
                 submit: function() {
                     this.submitted = true;
-                    this.validate();
+                    // this.validate();
                     var _this = this;
 
                     // If there were any errors in validation don't submit request
