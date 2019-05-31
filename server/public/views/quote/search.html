@@ -1,378 +1,373 @@
 <html>
+    <head>
+        <title>Insubuy Coding Challenge</title>
+        <link rel="stylesheet" href="/stylesheets/main.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:200,400,700">
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+        <script src="https://unpkg.com/vuejs-datepicker"></script>
+        <script src="/js/libraries/validator.min.js"></script>
+    </head>
+    <body>
+        <div id="quote-search">
+            <!-- MODAL WINDOW -->
+            <!-- This should really be a component that's got a reusable content section but for now I'll be writing it coupled to get it done -->
+            <div class="modal-background" v-if="modal"></div>
+            <div class="modal" v-if="modal">
+                <div class="modal-content">
+                    <div class="panel">
+                        <div class="panel-header light-blue-bg clearfix">
+                            <button type="button" class="close" aria-label="Close" v-on:click="closeModal"><span aria-hidden="true">×</span></button>
 
-<head>
-  <title>Insubuy Coding Challenge</title>
-  <link rel="stylesheet" href="/stylesheets/main.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:200,400,700">
-  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
-  <script src="https://unpkg.com/vuejs-datepicker"></script>
-  <script src="/js/libraries/validator.min.js"></script>
-</head>
+                            <h4 class="no-margin">Compare</h4>
+                        </div>
+                        <div class="panel-body clearfix">
+                            <div v-for="item in selected" class="bubble bubble-gray margin-bottom-sm column-sm-25" style="height:150px; padding:5px;">
+                                <div class="margin-bottom-md"><strong>{{item.name}}</strong></div>
+                                <div class="margin-bottom-sm"><small>{{item.description}}</small></div>
+                                
+                                <div class="margin-bottom-sm">{{ '$'+ (item.price) }}</div>
+                                <!-- <div class="label label-orange" v-if="item.bestSellers">Best Seller</div></h2> -->
+                                <div class="margin-bottom-sm">{{item.section}}</div>
+                                <div>{{item.type}}</div>
+                                <!-- {{item}} -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-<body>
-    <div id="quote-search">
-        <!-- MODAL WINDOW -->
-        <!-- This should really be a component that's got a reusable content section but for now I'll be writing it coupled to get it done -->
-        <div class="modal-background" v-if="modal"></div>
-        <div class="modal" v-if="modal">
-            <div class="modal-content">
+            <div class="container" >
+                <!-- INITIAL SEARCH FORM -->
                 <div class="panel">
                     <div class="panel-header light-blue-bg clearfix">
-                        <button type="button" class="close" aria-label="Close" v-on:click="closeModal"><span aria-hidden="true">×</span></button>
-
-                        <h4 class="no-margin">Compare</h4>
-                    </div>
-                    <div class="panel-body clearfix">
-                        <div v-for="item in selected" class="bubble bubble-gray margin-bottom-sm column-sm-25" style="height:150px; padding:5px;">
-                            <div class="margin-bottom-md"><strong>{{item.name}}</strong></div>
-                            <div class="margin-bottom-sm"><small>{{item.description}}</small></div>
-                            
-                            <div class="margin-bottom-sm">{{ '$'+ (item.price) }}</div>
-                            <!-- <div class="label label-orange" v-if="item.bestSellers">Best Seller</div></h2> -->
-                            <div class="margin-bottom-sm">{{item.section}}</div>
-                            <div>{{item.type}}</div>
-                            <!-- {{item}} -->
+                        <img class="panel-logo" src="/images/logo.png">
+                        <div class="panel-title">
+                            Travel Insurance
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="container" >
-            <!-- INITIAL SEARCH FORM -->
-            <div class="panel">
-                <div class="panel-header light-blue-bg clearfix">
-                    <img class="panel-logo" src="/images/logo.png">
-                    <div class="panel-title">
-                        Travel Insurance
-                    </div>
-                </div>
+                    <div class="panel-body">
+                        <form>
+                            <div class="alert alert-error column-xs-100" v-if="errorMessage" >
+                                <h4 class="no-margin margin-bottom-sm">Form Could Not Be Submitted</h4>
+                                <div v-html="errorMessage"></div>
+                            </div>
 
-                <div class="panel-body">
-                    <form>
-                        <div class="alert alert-error column-xs-100" v-if="errorMessage" >
-                            <h4 class="no-margin margin-bottom-sm">Form Could Not Be Submitted</h4>
-                            <div v-html="errorMessage"></div>
-                        </div>
-
-                        <div class="clearfix">    
-                            <div class="element-wrapper column-sm-50 clearfix">
-                                <div class="column-xs-50 column-full">
-                                    <label>Start Date</label>
-                                    <vuejs-datepicker v-model="start_date" input-class="form-element date" editable="true" name="start_date" format="MM/dd/yyyy" :typeable=true></vuejs-datepicker>
+                            <div class="clearfix">    
+                                <div class="element-wrapper column-sm-50 clearfix">
+                                    <div class="column-xs-50 column-full">
+                                        <label>Start Date</label>
+                                        <vuejs-datepicker v-model="start_date" input-class="form-element date" editable="true" name="start_date" format="MM/dd/yyyy" :typeable=true></vuejs-datepicker>
+                                    </div>
+                                    
+                                    <div class="column-xs-50 column-full">
+                                        <label>End Date</label>
+                                        <vuejs-datepicker  v-model="end_date" input-class="form-element date" name="end_date" format="MM/dd/yyyy" :typeable=true></vuejs-datepicker>
+                                    </div>                        
                                 </div>
-                                
-                                <div class="column-xs-50 column-full">
-                                    <label>End Date</label>
-                                    <vuejs-datepicker  v-model="end_date" input-class="form-element date" name="end_date" format="MM/dd/yyyy" :typeable=true></vuejs-datepicker>
-                                </div>                        
+            
+                                <div class="element-wrapper column-sm-50">
+                                    <label>Policy Max</label>
+                                    <select class="form-element" name="policy_max" v-model="policy_max">
+                                        <option value="">Choose a Max</option>
+                                        <option value="50">50,000</option>
+                                        <option value="100">100,000</option>
+                                        <option value="250">250,000</option>
+                                        <option value="500">500,000</option>
+                                    </select>
+                                </div>
+            
+                                <div class="element-wrapper column-sm-50">
+                                    <label>Citizenship</label>
+                                    <input v-model="citizenship" class="form-element" name="citizenship" />
+                                </div>
+            
+                                <div class="element-wrapper column-sm-50">
+                                    <label>Age/Year</label>
+                                    <input v-model="age" class="form-element" name="age" />
+                                </div>
+            
+                                <div class="element-wrapper column-sm-50">
+                                    <label>Mailing State</label>
+                                    <input v-model="state" class="form-element" name="state" />
+                                </div>
                             </div>
-        
-                            <div class="element-wrapper column-sm-50">
-                                <label>Policy Max</label>
-                                <select class="form-element" name="policy_max" v-model="policy_max">
-                                    <option value="">Choose a Max</option>
-                                    <option value="50">50,000</option>
-                                    <option value="100">100,000</option>
-                                    <option value="250">250,000</option>
-                                    <option value="500">500,000</option>
+
+                            <div class="element-wrapper column-xs-100">
+                                <input type="button" class="btn btn-submit" v-on:click="submit" value="Submit" />
+                                <input type="button" class="btn btn-reset" v-on:click="reset" value="Reset" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <br>
+
+                <!-- INITIAL SEARCH RESULTS -->
+                <div class="panel" v-if="quotes">
+                    <div class="panel-header light-blue-bg clearfix">
+                        <h4 class="no-margin">Policies</h4>
+                    </div>
+                    <div class="panel-body">
+                        <!-- FILTER AND SORT FORM -->
+                        <div class="form-inline margin-bottom-md">
+                            <div class=" ">
+                                <select v-model="section_filter" class="form-element margin-bottom-md" style="width: 200px">
+                                    <option v-for="section in availableSections" v-bind:value="section.value">
+                                        {{ section.name }}
+                                    </option>
                                 </select>
+            
+                                <select v-model="type_filter" class="form-element margin-bottom-md" style="width: 200px;">
+                                    <option v-for="type in availableTypes" v-bind:value="type.value">
+                                        {{ type.name }}
+                                    </option>
+                                </select>
+            
+                                <input type="checkbox" class="margin-bottom-md" v-model="best_seller" name="best_seller" /> Best Seller
+                        
+                                <input type="button" class="btn btn-sm btn-submit margin-bottom-md" v-on:click="filter" value="Filter" />
                             </div>
-        
-                            <div class="element-wrapper column-sm-50">
-                                <label>Citizenship</label>
-                                <input v-model="citizenship" class="form-element" name="citizenship" />
-                            </div>
-        
-                            <div class="element-wrapper column-sm-50">
-                                <label>Age/Year</label>
-                                <input v-model="age" class="form-element" name="age" />
-                            </div>
-        
-                            <div class="element-wrapper column-sm-50">
-                                <label>Mailing State</label>
-                                <input v-model="state" class="form-element" name="state" />
+                            <div class="">
+                                <div class="btn btn-sm" v-bind:class="[priceSort ? 'btn-active' : 'btn-inactive']" v-on:click="sortByPrice">Sort By Price</div>
+                                <div class="btn btn-sm" v-bind:class="[nameSort ? 'btn-active' : 'btn-inactive']" v-on:click="sortByName">Sort By Name</div>
                             </div>
                         </div>
 
-                        <div class="element-wrapper column-xs-100">
-                            <input type="button" class="btn btn-submit" v-on:click="submit" value="Submit" />
-                            <input type="button" class="btn btn-reset" v-on:click="reset" value="Reset" />
+                        <br>
+
+                        <div class="margin-bottom-sm">
+                            <div class="btn btn-sm btn-submit" v-on:click="compare">Compare</div>
                         </div>
-                    </form>
-                </div>
-            </div>
 
-            <br>
-
-            <!-- INITIAL SEARCH RESULTS -->
-            <div class="panel" v-if="quotes">
-                <div class="panel-header light-blue-bg clearfix">
-                    <h4 class="no-margin">Policies</h4>
-                </div>
-                <div class="panel-body">
-                    <!-- FILTER AND SORT FORM -->
-                    <div class="form-inline margin-bottom-md">
-                        <div class=" ">
-                            <select v-model="section_filter" class="form-element margin-bottom-md" style="width: 200px">
-                                <option v-for="section in availableSections" v-bind:value="section.value">
-                                    {{ section.name }}
-                                </option>
-                            </select>
-        
-                            <select v-model="type_filter" class="form-element margin-bottom-md" style="width: 200px;">
-                                <option v-for="type in availableTypes" v-bind:value="type.value">
-                                    {{ type.name }}
-                                </option>
-                            </select>
-        
-                            <input type="checkbox" class="margin-bottom-md" v-model="best_seller" name="best_seller" /> Best Seller
-                    
-                            <input type="button" class="btn btn-sm btn-submit margin-bottom-md" v-on:click="filter" value="Filter" />
+                        <div class="alert alert-error" v-if="compareError" >
+                            <h4 class="no-margin margin-bottom-sm">Compare Error</h4>
+                            <div v-html="compareError"></div>
                         </div>
-                        <div class="">
-                            <div class="btn btn-sm" v-bind:class="[priceSort ? 'btn-active' : 'btn-inactive']" v-on:click="sortByPrice">Sort By Price</div>
-                            <div class="btn btn-sm" v-bind:class="[nameSort ? 'btn-active' : 'btn-inactive']" v-on:click="sortByName">Sort By Name</div>
-                        </div>
-                    </div>
-
-                    <br>
-
-                    <div class="margin-bottom-sm">
-                        <div class="btn btn-sm btn-submit" v-on:click="compare">Compare</div>
-                    </div>
-
-                    <div class="alert alert-error" v-if="compareError" >
-                        <h4 class="no-margin margin-bottom-sm">Compare Error</h4>
-                        <div v-html="compareError"></div>
-                    </div>
-                    
-                    <!-- RESULT OUTPUT -->
-                    <div v-for="item in quotes" class="bubble bubble-gray margin-bottom-sm clickable" v-bind:class="{'bubble-active': selected.includes(item)}" v-on:click="select(item)">
-                        <h2 class="no-margin margin-bottom-sm">{{item.name}} - {{ '$'+ (item.price) }} <div class="label label-orange" v-if="item.bestSellers">Best Seller</div></h2>
-                        <div class="margin-bottom-md"><i>{{item.description}}</i></div>
-                        <div class="">
-                            <div class="margin-bottom-sm"><strong>Section:</strong> {{item.section}}</div>
-                            <div><strong>Type:</strong> {{item.type}}</div>
+                        
+                        <!-- RESULT OUTPUT -->
+                        <div v-for="item in quotes" class="bubble bubble-gray margin-bottom-sm clickable" v-bind:class="{'bubble-active': selected.includes(item)}" v-on:click="select(item)">
+                            <h2 class="no-margin margin-bottom-sm">{{item.name}} - {{ '$'+ (item.price) }} <div class="label label-orange" v-if="item.bestSellers">Best Seller</div></h2>
+                            <div class="margin-bottom-md"><i>{{item.description}}</i></div>
+                            <div class="">
+                                <div class="margin-bottom-sm"><strong>Section:</strong> {{item.section}}</div>
+                                <div><strong>Type:</strong> {{item.type}}</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</body>
+    </body>
 
-<script>
-    Date.prototype.mmddyyyy = function() {
-        var yyyy = this.getFullYear();
-        var mm = this.getMonth() < 9 ? "0" + (this.getMonth() + 1) : (this.getMonth() + 1); // getMonth() is zero-based
-        var dd  = this.getDate() < 10 ? "0" + this.getDate() : this.getDate();
-        return mm + "/" + dd + "/" + yyyy;
-    };
+    <script>
+        Date.prototype.mmddyyyy = function() {
+            var yyyy = this.getFullYear();
+            var mm = this.getMonth() < 9 ? "0" + (this.getMonth() + 1) : (this.getMonth() + 1); // getMonth() is zero-based
+            var dd  = this.getDate() < 10 ? "0" + this.getDate() : this.getDate();
+            return mm + "/" + dd + "/" + yyyy;
+        };
 
-    var form = new Vue({
-        el: '#quote-search',
-        components: {
-            vuejsDatepicker
-        },
-        data: {
-            start_date: '',
-            end_date: '',
-            policy_max: '',
-            citizenship: '',
-            age: '',
-            state: '',
-            errorMessage: null,
-            compareError: '',
-            quotes: null,
-            results: null,
-            best_seller: null,
-            priceSort: false,
-            nameSort: true,
-            availableTypes: {'': {name: "Choose a Type", value:''}},
-            availableSections: {'':{name:'Choose a Section', value: ''}},
-            section_filter: '',
-            type_filter: '',
-            modal: false,
-            selected: [],
-            active: {}
-        },
-        created: function () {},
-        methods: {
-            select: function(item) {
-                var index = this.selected.indexOf(item);
-                if(index > -1) { //If item is already on the array, we remove to allow toggle functionality
-                    this.selected.splice(index, 1);
-                } else { //If item is not on the array, we add to the selected options
-                    this.selected.push(item);
-                }
+        var form = new Vue({
+            el: '#quote-search',
+            components: {
+                vuejsDatepicker
             },
-            compare: function() {
-                if(this.selected.length < 2) {
-                    this.modal = false;
-                    this.compareError = "Must choose at least 2 plans to compare";
-                } else if (this.selected.length > 4) {
-                    this.modal = false;
-                    this.compareError = "Must choose less than 4 plans to compare";
-                } else {
-                    this.modal = true;
-                    this.compareError = '';
-                }
+            data: {
+                start_date: '',
+                end_date: '',
+                policy_max: '',
+                citizenship: '',
+                age: '',
+                state: '',
+                errorMessage: null,
+                compareError: '',
+                quotes: null,
+                results: null,
+                best_seller: null,
+                priceSort: false,
+                nameSort: true,
+                availableTypes: {'': {name: "Choose a Type", value:''}},
+                availableSections: {'':{name:'Choose a Section', value: ''}},
+                section_filter: '',
+                type_filter: '',
+                modal: false,
+                selected: [],
+                active: {}
             },
-            closeModal: function() {
-                this.modal = false;
-            },
-            sortByPrice: function() {
-                this.priceSort = true;
-                this.nameSort = false;
-                this.sortQuotes();
-            },
-            sortByName: function() {
-                this.priceSort = false;
-                this.nameSort = true;
-                this.sortQuotes();
-            },
-            sortQuotes: function() {
-                if(this.priceSort) {
-                    this.quotes.sort(function(a, b) {
-                        return a['price'] > b['price'] ? 1 : -1;
-                    });
-                } else if (this.nameSort) {
-                    this.quotes.sort(function(a, b) {
-                        return a['name'] > b['name'] ? 1 : -1;
-                    });
-                }
-            },
-            filter: function() {
-                // Create a close of the original data so we can filter and reduce without having to requery
-                if(this.best_seller)
-                    this.quotes = this.results.filter(item => item.bestSellers ? true : false);
-                else 
-                    this.quotes = this.results.filter(item => true);
-
-                if(this.section_filter)
-                    this.quotes = this.quotes.filter(item => item.section == this.section_filter ? true : false);
-
-                if(this.type_filter)
-                    this.quotes = this.quotes.filter(item => item.type == this.type_filter ? true : false);
-
-                if(this.policy_max) 
-                    this.quotes = this.quotes.filter(item => item.price <= this.policy_max ? true : false);
-
-                this.sortQuotes();
-                this.selected = [];
-            },
-            submit: function() {
-                this.validate();
-                var _this = this;
-
-                // If there were any errors in validation don't submit request
-                if(!this.errorMessage) {
-                    // Submit the request for results here
-                    axios
-                        .get('http://localhost:8080/quotes')
-                        .then(function(response) {
-                            _this.results = response.data.quotes;
-                            
-                            // Run through the filter since the policy in the initial form
-                            // will reduce results
-                            _this.filter();
-
-                            // Build the available filter choices for both section and type
-                            for(var index in _this.quotes) {
-                                var item = _this.quotes[index];
-                                _this.availableSections[item.section] = {name: item.section, value:item.section};
-                                _this.availableTypes[item.type] = {name:item.type, value:item.type};
-                            }
-                        })
-                        .catch(error => console.log(error))
-                }
-            },
-            reset: function() {
-                this.start_date = '';
-                this.end_date = '';
-                this.policy_max = '';
-                this.citizenship = '';
-                this.age = '';
-                this.state = '';
-                this.errorMessage = null;
-                this.quotes = null;
-            },
-            validate: function() {
-                var dateRegex = /^\\d{2}[\/]\\d{2}[\/]\\d{4}$/;
-                var wordRegex = /[^a-zA-Z\\s]/;
-                var errors = {};
-
-                var start_date = '';
-                if(this.start_date instanceof Date)
-                    start_date = this.start_date.mmddyyyy();
-
-                if(validator.isEmpty(start_date))
-                    errors['start_date'] = "<li>Start Date cannot be empty</li>";
-                else if(!validator.matches(start_date, dateRegex)) {
-                    errors['start_date'] = "<li>Start Date must match MM/DD/YYYY</li>";
-                }                
-
-                var end_date = '';
-                if(this.end_date instanceof Date)
-                    end_date = this.end_date.mmddyyyy();
-
-                if(validator.isEmpty(end_date))
-                    errors['end_date'] = "<li>End Date cannot be empty</li>";
-                else if(!validator.matches(end_date, dateRegex)) {
-                    errors['end_date'] = "<li>End Date must match MM/DD/YYYY</li>";
-                } else if(this.end_date <= this.start_date) {
-                    errors['end_date'] = "<li>End Date must be after Start Date";
-                }
-
-                if(validator.isEmpty(this.citizenship)){
-                    errors['citizenship'] = "<li>Citizenship cannot be empty</li>";
-                } else if(this.citizenship.match(wordRegex)) {
-                    errors['citizenship'] = "<li>Citizenship can only contain letters</li>";
-                }
-
-                if(validator.isEmpty(this.state)){
-                    errors['state'] = "<li>Mailing State cannot be empty</li>";
-                } else if(this.state.match(wordRegex)) {
-                    errors['state'] = "<li>Mailing State can only contain letters</li>";
-                }
-
-                if(validator.isEmpty(this.policy_max)){
-                    errors['policy_max'] = "<li>Max Policy cannot be empty</li>";
-                }
-
-                if(validator.isEmpty(this.age)){
-                    errors['age'] = "<li>Age cannot be empty</li>";
-                } else if(validator.matches(this.age, /[^0-9]/)) {
-                    errors['age'] = "<li>Age can only contain numbers</li>";
-                } else {
-                    // This means it's a year
-                    if(this.age > 1000) {
-                        var date = new Date();
-                        var age = date.getFullYear() - this.age;
+            created: function () {},
+            methods: {
+                select: function(item) {
+                    var index = this.selected.indexOf(item);
+                    if(index > -1) { //If item is already on the array, we remove to allow toggle functionality
+                        this.selected.splice(index, 1);
+                    } else { //If item is not on the array, we add to the selected options
+                        this.selected.push(item);
+                    }
+                },
+                compare: function() {
+                    if(this.selected.length < 2) {
+                        this.modal = false;
+                        this.compareError = "Must choose at least 2 plans to compare";
+                    } else if (this.selected.length > 4) {
+                        this.modal = false;
+                        this.compareError = "Must choose less than 4 plans to compare";
                     } else {
-                        var age = this.age;
+                        this.modal = true;
+                        this.compareError = '';
+                    }
+                },
+                closeModal: function() {
+                    this.modal = false;
+                },
+                sortByPrice: function() {
+                    this.priceSort = true;
+                    this.nameSort = false;
+                    this.sortQuotes();
+                },
+                sortByName: function() {
+                    this.priceSort = false;
+                    this.nameSort = true;
+                    this.sortQuotes();
+                },
+                sortQuotes: function() {
+                    if(this.priceSort) {
+                        this.quotes.sort(function(a, b) {
+                            return a['price'] > b['price'] ? 1 : -1;
+                        });
+                    } else if (this.nameSort) {
+                        this.quotes.sort(function(a, b) {
+                            return a['name'] > b['name'] ? 1 : -1;
+                        });
+                    }
+                },
+                filter: function() {
+                    // Create a close of the original data so we can filter and reduce without having to requery
+                    if(this.best_seller)
+                        this.quotes = this.results.filter(item => item.bestSellers ? true : false);
+                    else 
+                        this.quotes = this.results.filter(item => true);
+
+                    if(this.section_filter)
+                        this.quotes = this.quotes.filter(item => item.section == this.section_filter ? true : false);
+
+                    if(this.type_filter)
+                        this.quotes = this.quotes.filter(item => item.type == this.type_filter ? true : false);
+
+                    if(this.policy_max) 
+                        this.quotes = this.quotes.filter(item => item.price <= this.policy_max ? true : false);
+
+                    this.sortQuotes();
+                    this.selected = [];
+                },
+                submit: function() {
+                    this.validate();
+                    var _this = this;
+
+                    // If there were any errors in validation don't submit request
+                    if(!this.errorMessage) {
+                        // Submit the request for results here
+                        axios
+                            .get('http://localhost:8080/quotes')
+                            .then(function(response) {
+                                _this.results = response.data.quotes;
+                                
+                                // Run through the filter since the policy in the initial form
+                                // will reduce results
+                                _this.filter();
+
+                                // Build the available filter choices for both section and type
+                                for(var index in _this.quotes) {
+                                    var item = _this.quotes[index];
+                                    _this.availableSections[item.section] = {name: item.section, value:item.section};
+                                    _this.availableTypes[item.type] = {name:item.type, value:item.type};
+                                }
+                            })
+                            .catch(error => console.log(error))
+                    }
+                },
+                reset: function() {
+                    this.start_date = '';
+                    this.end_date = '';
+                    this.policy_max = '';
+                    this.citizenship = '';
+                    this.age = '';
+                    this.state = '';
+                    this.errorMessage = null;
+                    this.quotes = null;
+                },
+                validate: function() {
+                    var dateRegex = /^\\d{2}[\/]\\d{2}[\/]\\d{4}$/;
+                    var wordRegex = /[^a-zA-Z\\s]/;
+                    var errors = {};
+
+                    var start_date = '';
+                    if(this.start_date instanceof Date)
+                        start_date = this.start_date.mmddyyyy();
+
+                    if(validator.isEmpty(start_date))
+                        errors['start_date'] = "<li>Start Date cannot be empty</li>";
+                    else if(!validator.matches(start_date, dateRegex)) {
+                        errors['start_date'] = "<li>Start Date must match MM/DD/YYYY</li>";
+                    }                
+
+                    var end_date = '';
+                    if(this.end_date instanceof Date)
+                        end_date = this.end_date.mmddyyyy();
+
+                    if(validator.isEmpty(end_date))
+                        errors['end_date'] = "<li>End Date cannot be empty</li>";
+                    else if(!validator.matches(end_date, dateRegex)) {
+                        errors['end_date'] = "<li>End Date must match MM/DD/YYYY</li>";
+                    } else if(this.end_date <= this.start_date) {
+                        errors['end_date'] = "<li>End Date must be after Start Date";
                     }
 
-                    if(age > 100) {
-                        errors['age'] = "<li>Age cannot be more than 100</li>";
+                    if(validator.isEmpty(this.citizenship)){
+                        errors['citizenship'] = "<li>Citizenship cannot be empty</li>";
+                    } else if(this.citizenship.match(wordRegex)) {
+                        errors['citizenship'] = "<li>Citizenship can only contain letters</li>";
                     }
-                }
 
-                this.errorMessage = '';
-                for(var key in errors) {
-                    this.errorMessage += errors[key];
+                    if(validator.isEmpty(this.state)){
+                        errors['state'] = "<li>Mailing State cannot be empty</li>";
+                    } else if(this.state.match(wordRegex)) {
+                        errors['state'] = "<li>Mailing State can only contain letters</li>";
+                    }
+
+                    if(validator.isEmpty(this.policy_max)){
+                        errors['policy_max'] = "<li>Max Policy cannot be empty</li>";
+                    }
+
+                    if(validator.isEmpty(this.age)){
+                        errors['age'] = "<li>Age cannot be empty</li>";
+                    } else if(validator.matches(this.age, /[^0-9]/)) {
+                        errors['age'] = "<li>Age can only contain numbers</li>";
+                    } else {
+                        // This means it's a year
+                        if(this.age > 1000) {
+                            var date = new Date();
+                            var age = date.getFullYear() - this.age;
+                        } else {
+                            var age = this.age;
+                        }
+
+                        if(age > 100) {
+                            errors['age'] = "<li>Age cannot be more than 100</li>";
+                        }
+                    }
+
+                    this.errorMessage = '';
+                    for(var key in errors) {
+                        this.errorMessage += errors[key];
+                    }
+                },
+                getValue: function(key) {
+                    var _this = this;
+                    return _this[key] || null;
                 }
-            },
-            getValue: function(key) {
-                var _this = this;
-                return _this[key] || null;
             }
-        }
-    });
-
-    
-</script>
-
+        });
+    </script>
 </html>
