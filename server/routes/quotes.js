@@ -7,6 +7,8 @@ router.get('/', (req, res) => {
   res.status(200).send(mockData);
 });
 
+router.get('/search', (req, res) => { res.render('quote') });
+
 router.post('/',(req,res) => {
   sendResponseData(req,res);
 });
