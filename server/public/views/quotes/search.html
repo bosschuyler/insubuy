@@ -12,30 +12,19 @@
         <div id="quote-search">
             <!-- MODAL WINDOW -->
             <!-- This should really be a component that's got a reusable content section but for now I'll be writing it coupled to get it done -->
-            <div class="modal-background" v-if="modal"></div>
-            <div class="modal" v-if="modal">
-                <div class="modal-content">
-                    <div class="panel">
-                        <div class="panel-header light-blue-bg clearfix">
-                            <button type="button" class="close" aria-label="Close" v-on:click="closeModal"><span aria-hidden="true">×</span></button>
-
-                            <h4 class="no-margin">Compare</h4>
-                        </div>
-                        <div class="panel-body clearfix">
-                            <div v-for="item in selected" class="bubble bubble-gray margin-bottom-sm column-sm-25" style="height:150px; padding:5px;">
-                                <div class="margin-bottom-md"><strong>{{item.name}}</strong></div>
-                                <div class="margin-bottom-sm"><small>{{item.description}}</small></div>
-                                
-                                <div class="margin-bottom-sm">{{ '$'+ (item.price) }}</div>
-                                <!-- <div class="label label-orange" v-if="item.bestSellers">Best Seller</div></h2> -->
-                                <div class="margin-bottom-sm">{{item.section}}</div>
-                                <div>{{item.type}}</div>
-                                <!-- {{item}} -->
-                            </div>
-                        </div>
-                    </div>
+            
+            <modal-window ref="CompareModal" title="Compare Plans">
+                <div v-for="item in selected" class="bubble bubble-gray margin-bottom-sm column-sm-25" style="height:150px; padding:5px;">
+                    <div class="margin-bottom-md"><strong>{{item.name}}</strong></div>
+                    <div class="margin-bottom-sm"><small>{{item.description}}</small></div>
+                    
+                    <div class="margin-bottom-sm">{{ '$'+ (item.price) }}</div>
+                    <!-- <div class="label label-orange" v-if="item.bestSellers">Best Seller</div></h2> -->
+                    <div class="margin-bottom-sm">{{item.section}}</div>
+                    <div>{{item.type}}</div>
+                    <!-- {{item}} -->
                 </div>
-            </div>
+            </modal-window>
 
             <div class="container" >
                 <!-- INITIAL SEARCH FORM -->
@@ -169,6 +158,38 @@
             return mm + "/" + dd + "/" + yyyy;
         };
 
+        Vue.component('modal-window', {
+            props: ['open', 'title'],
+            data: function() {
+                return {opened: this.open};
+            },
+            methods: {
+                show: function() {
+                    this.opened = true;
+                },
+                hide: function() {
+                    this.opened = false;
+                }
+            },
+            template: '\
+                <div>\
+                    <div class="modal-background" v-if="opened"></div>\
+                    <div class="modal" v-if="opened">\
+                        <div class="modal-content">\
+                            <div class="panel"> \
+                                <div class="panel-header light-blue-bg clearfix">\
+                                    <button type="button" class="close" aria-label="Close" v-on:click="hide"><span aria-hidden="true">×</span></button>\
+                                    <h4 class="no-margin">{{title}}</h4>\
+                                </div>\
+                                <div class="panel-body clearfix">\
+                                    <slot></slot>\
+                                </div>\
+                            </div>\
+                        </div>\
+                    </div>\
+                </div>'
+        });
+
         var form = new Vue({
             el: '#quote-search',
             components: {
@@ -193,7 +214,6 @@
                 availableSections: {'':{name:'Choose a Section', value: ''}},
                 section_filter: '',
                 type_filter: '',
-                modal: false,
                 selected: [],
                 active: {}
             },
@@ -209,18 +229,15 @@
                 },
                 compare: function() {
                     if(this.selected.length < 2) {
-                        this.modal = false;
+                        this.$refs.CompareModal.hide();
                         this.compareError = "Must choose at least 2 plans to compare. Click a row to select a plan.";
                     } else if (this.selected.length > 4) {
-                        this.modal = false;
+                        this.$refs.CompareModal.hide()
                         this.compareError = "Must choose less than 4 plans to compare. Click a selected row to unselect a plan.";
                     } else {
-                        this.modal = true;
+                        this.$refs.CompareModal.show()
                         this.compareError = '';
                     }
-                },
-                closeModal: function() {
-                    this.modal = false;
                 },
                 sortByPrice: function() {
                     this.priceSort = true;
