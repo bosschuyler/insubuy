@@ -1,9 +1,8 @@
 <html>
 
 <head>
-  <title>Insubuy coding challenge</title>
+  <title>Insubuy Coding Challenge</title>
   <link rel="stylesheet" href="/stylesheets/main.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:200,400,700">
   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
@@ -11,13 +10,9 @@
   <script src="/js/libraries/validator.min.js"></script>
 </head>
 
-
-<style>
-    
-</style>
-
 <body>
     <div id="quote-search">
+        <!-- MODAL WINDOW -->
         <!-- This should really be a component that's got a reusable content section but for now I'll be writing it coupled to get it done -->
         <div class="modal-background" v-if="modal"></div>
         <div class="modal" v-if="modal">
@@ -45,6 +40,7 @@
         </div>
 
         <div class="container" >
+            <!-- INITIAL SEARCH FORM -->
             <div class="panel">
                 <div class="panel-header light-blue-bg clearfix">
                     <img class="panel-logo" src="/images/logo.png">
@@ -107,12 +103,16 @@
                     </form>
                 </div>
             </div>
+
             <br>
+
+            <!-- INITIAL SEARCH RESULTS -->
             <div class="panel" v-if="quotes">
                 <div class="panel-header light-blue-bg clearfix">
                     <h4 class="no-margin">Policies</h4>
                 </div>
                 <div class="panel-body">
+                    <!-- FILTER AND SORT FORM -->
                     <div class="form-inline margin-bottom-md">
                         <div class=" ">
                             <select v-model="section_filter" class="form-element margin-bottom-md" style="width: 200px">
@@ -148,6 +148,7 @@
                         <div v-html="compareError"></div>
                     </div>
                     
+                    <!-- RESULT OUTPUT -->
                     <div v-for="item in quotes" class="bubble bubble-gray margin-bottom-sm clickable" v-bind:class="{'bubble-active': selected.includes(item)}" v-on:click="select(item)">
                         <h2 class="no-margin margin-bottom-sm">{{item.name}} - {{ '$'+ (item.price) }} <div class="label label-orange" v-if="item.bestSellers">Best Seller</div></h2>
                         <div class="margin-bottom-md"><i>{{item.description}}</i></div>
@@ -201,10 +202,9 @@
         methods: {
             select: function(item) {
                 var index = this.selected.indexOf(item);
-                if(index > -1) {
+                if(index > -1) { //If item is already on the array, we remove to allow toggle functionality
                     this.selected.splice(index, 1);
-                }
-                else {
+                } else { //If item is not on the array, we add to the selected options
                     this.selected.push(item);
                 }
             },
@@ -264,17 +264,22 @@
                 this.selected = [];
             },
             submit: function() {
-                // this.validate();
+                this.validate();
                 var _this = this;
+
+                // If there were any errors in validation don't submit request
                 if(!this.errorMessage) {
                     // Submit the request for results here
                     axios
                         .get('http://localhost:8080/quotes')
                         .then(function(response) {
                             _this.results = response.data.quotes;
-                            // Build the available filter choices for both section and type
+                            
+                            // Run through the filter since the policy in the initial form
+                            // will reduce results
                             _this.filter();
 
+                            // Build the available filter choices for both section and type
                             for(var index in _this.quotes) {
                                 var item = _this.quotes[index];
                                 _this.availableSections[item.section] = {name: item.section, value:item.section};
@@ -295,7 +300,7 @@
                 this.quotes = null;
             },
             validate: function() {
-                var regex = /^\\d{2}[\/]\\d{2}[\/]\\d{4}$/;
+                var dateRegex = /^\\d{2}[\/]\\d{2}[\/]\\d{4}$/;
                 var wordRegex = /[^a-zA-Z\\s]/;
                 var errors = {};
 
@@ -305,7 +310,7 @@
 
                 if(validator.isEmpty(start_date))
                     errors['start_date'] = "<li>Start Date cannot be empty</li>";
-                else if(!validator.matches(start_date, regex)) {
+                else if(!validator.matches(start_date, dateRegex)) {
                     errors['start_date'] = "<li>Start Date must match MM/DD/YYYY</li>";
                 }                
 
@@ -315,18 +320,10 @@
 
                 if(validator.isEmpty(end_date))
                     errors['end_date'] = "<li>End Date cannot be empty</li>";
-                else if(!validator.matches(end_date, regex)) {
+                else if(!validator.matches(end_date, dateRegex)) {
                     errors['end_date'] = "<li>End Date must match MM/DD/YYYY</li>";
                 } else if(this.end_date <= this.start_date) {
                     errors['end_date'] = "<li>End Date must be after Start Date";
-                }
-
-                if(validator.isEmpty(end_date))
-                    errors['end_date'] = "<li>End Date cannot be empty</li>";
-                else if(!validator.matches(end_date, regex)) {
-                    errors['end_date'] = "<li>End Date must match MM/DD/YYYY</li>";
-                } else if(this.end_date <= this.start_date) {
-                    errors['end_date'] = "<li>End Date must be after Start Date</li>";
                 }
 
                 if(validator.isEmpty(this.citizenship)){
