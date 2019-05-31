@@ -47,12 +47,12 @@
                                 <div class="element-wrapper column-sm-50 clearfix">
                                     <div class="column-xs-50 column-full">
                                         <label>Start Date</label>
-                                        <vuejs-datepicker @selected="validate" v-model="start_date" input-class="form-element date" editable="true" name="start_date" format="MM/dd/yyyy" :typeable=true></vuejs-datepicker>
+                                        <vuejs-datepicker @input="validate" v-model="start_date" input-class="form-element date" editable="true" name="start_date" format="MM/dd/yyyy" :typeable=true></vuejs-datepicker>
                                     </div>
                                     
                                     <div class="column-xs-50 column-full" >
                                         <label>End Date</label>
-                                        <vuejs-datepicker @selected="validate" @input="validate"  v-model="end_date" input-class="form-element date" name="end_date" format="MM/dd/yyyy" :typeable=true></vuejs-datepicker>
+                                        <vuejs-datepicker @input="validate" v-model="end_date" input-class="form-element date" name="end_date" format="MM/dd/yyyy" :typeable=true></vuejs-datepicker>
                                     </div>                        
                                 </div>
             
