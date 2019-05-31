@@ -209,10 +209,10 @@
                 compare: function() {
                     if(this.selected.length < 2) {
                         this.modal = false;
-                        this.compareError = "Must choose at least 2 plans to compare";
+                        this.compareError = "Must choose at least 2 plans to compare. Click a row to select a plan.";
                     } else if (this.selected.length > 4) {
                         this.modal = false;
-                        this.compareError = "Must choose less than 4 plans to compare";
+                        this.compareError = "Must choose less than 4 plans to compare. Click a selected row to unselect a plan.";
                     } else {
                         this.modal = true;
                         this.compareError = '';
