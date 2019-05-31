@@ -1,6 +1,45 @@
 $light-blue: #f0f3f6;
 $gray: #dadada;
 
+$xs:	3px;
+$sm:    5px;
+$md:	10px;
+$lg:    15px;
+$xl:	20px;
+$xxl:   30px;
+
+$padding-xs:	$xs;
+$padding-sm:    $sm;
+$padding-md:	$md;
+$padding-lg:    $lg;
+$padding-xl:	$xl;
+$padding-xxl:   $xxl;
+
+$margin-xs:		$xs;
+$margin-sm:		$sm;
+$margin-md:		$md;
+$margin-lg:		$lg;
+$margin-xl:		$xl;
+$margin-xxl:    $xxl;
+
+$brand-white: 			#fff;
+$brand-black:			#000;
+$brand-offblack:        #333;
+
+$brand-gray:            #ddd;
+
+$brand-blue-gray:       #a5c4da;
+// $brand-blue-gray:       #94a6b5;
+$brand-light-blue:      #7fb5da;
+$brand-red: 			#d9534f;
+$brand-green: 			#5cb85c;
+$brand-orange:          #E1883C;
+$brand-light-orange:    #f0ad4e;
+$brand-purple:          #6824BD;
+$brand-pink:          	#D050D1;
+$brand-yellow:			#FFC400;
+$brand-gray: 			#EFEFEF;
+
 body {
     font-family: "Raleway";
     font-size: 13px;
@@ -18,6 +57,90 @@ body {
     margin-top: 10px;
     
 }
+
+.modal-background {
+    opacity: 0.5;
+    filter: alpha(opacity=50);
+    background-color: #000;
+    position: fixed;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+
+    z-index: 100000;
+}
+
+.modal {
+    position: fixed;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    z-index: 100010;
+}
+
+.bubble {
+    padding: 10px 15px;
+    border-radius: 3px;
+    border: 1px solid transparent;
+
+    &.bubble-blue-gray {
+        color: #333;
+        background-color: $brand-blue-gray;
+        border-color: $brand-blue-gray;
+
+        & .label.label-default {
+            background-color: #5d6069;
+        }
+
+        & h1 small, .panel-blue-gray h2 small, & h3 small, & h4 small {
+            color: #555;
+        }
+    }
+
+    &.bubble-gray {
+        color: #333;
+        background-color: $brand-gray;
+        border-color: $brand-gray;
+    }
+
+    &.bubble-default {
+        color:               #333;
+        border-color:        #ddd;
+        background-color:    #f5f5f5;
+    }
+
+    &.bubble-active {
+        background-color: #f0b985;
+        border-color: #c58a52;
+    }
+}
+
+.label {
+    border-radius:3px;  
+    padding:3px; 
+    font-stretch: condensed; 
+    display:inline-block; 
+    font-size: 10px;
+    font-weight: bold;
+    
+    &.label-default {
+        background-color:#666;
+        color:#fff;
+    }
+
+    &.label-orange {
+        background-color: #eeaa21;
+        color: #fff;
+    }
+}
+
+h2 .label {
+    font-size:13px;
+}
+
+
 
 .panel {
     border: 1px solid $gray;
@@ -64,6 +187,7 @@ select.form-element {
     height:40px;
 }
 
+
 .form-element {
     display: block;
     width: 100%;
@@ -85,11 +209,16 @@ select.form-element {
         box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
     }
 }
+.form-inline .form-element {
+    display:inline-block;
+}
+
 
 .column-sm-100, .column-xs-100 {
     width: 96%;
     margin-right: 2%;
     margin-left: 2%;
+    box-sizing: border-box;
 }
 
 .column-sm-50, .column-xs-50 {
@@ -97,6 +226,7 @@ select.form-element {
     margin-left:2%;
     margin-right:2%;
     float:left;
+    box-sizing: border-box;
 
     &.column-full {
         width:48%;
@@ -109,12 +239,24 @@ select.form-element {
     }
 }
 
+.column-sm-25 {
+    width: 23%;
+    margin-left:1%;
+    margin-right:1%;
+    float:left;
+    box-sizing: border-box;
+}
+
 .element-wrapper {
     margin-bottom: 15px;
 }
 
+.clickable {
+    cursor: pointer;
+}
+
 .btn {
-    padding: 10px;
+    padding: 8px 10px;
     text-align: center;
     border-radius: 3px;
     font-weight: bold;
@@ -122,13 +264,31 @@ select.form-element {
     border: 0;
     cursor: pointer;
 
+    &.btn-xs {
+        padding: 3px 6px;
+    }
+
     &.btn-submit {
-        background-color: #e29837;
+        // background-color: #e29837;
+        // background-color: #f0c859;
+        background-color: #4a85c7;
         color: white;
     }
 
+    &.btn-active {
+        border:1px solid #eeaa21;
+        background-color: #ffedc0;
+        color: black;
+    }
+
+    &.btn-inactive, &.btn-default {
+        border:1px solid #999;
+        background-color: #fff;
+        color: black;
+    }
+
     &.btn-reset {
-        background-color: #427ce9;
+        background-color: #dd6363;
         color: white;
     }
 }
@@ -140,8 +300,8 @@ select.form-element {
     margin-bottom: 15px;
 
     &.alert-error {
-        background-color: #ff8383;
-        border: 1px solid #f55252;
+        background-color: #f2baba;
+        border: 1px solid #ba6161;
     }
 }
 
@@ -149,8 +309,17 @@ select.form-element {
     margin: 0;
 }
 
+
+.margin-bottom-xs {
+    margin-bottom: $xs;
+}
+
+.margin-bottom-sm {
+    margin-bottom: $sm;
+}
+
 .margin-bottom-md {
-    margin-bottom: 5px;
+    margin-bottom: $md;
 }
 
 @media only screen and (max-width: 820px) {
