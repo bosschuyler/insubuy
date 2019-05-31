@@ -7,7 +7,7 @@ router.get('/', (req, res) => {
   res.status(200).send(mockData);
 });
 
-router.get('/search', (req, res) => { res.render('quote/search') });
+router.get('/search', (req, res) => { res.render('quotes/search') });
 
 router.post('/',(req,res) => {
   sendResponseData(req,res);
